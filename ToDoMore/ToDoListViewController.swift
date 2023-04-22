@@ -11,9 +11,13 @@ class ToDoListViewController: UITableViewController {
 
     var itemArray = ["bye milk", "destroy demogorgone", "eat apple"]
     
+    let defaults = UserDefaults.standard
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        if let items = defaults.array(forKey: "ToDoMoreListArray") as? [String] {
+            itemArray = items
+        }
     }
 
     //MARK: - TableViewDataSource -
@@ -47,13 +51,14 @@ class ToDoListViewController: UITableViewController {
         
         let action = UIAlertAction(title: "Add item", style: .default) { (action) in
             self.itemArray.append(textField.text!)
+            self.defaults.setValue(self.itemArray, forKey: "ToDoMoreListArray")
             self.tableView.reloadData()
         }
         alert.addTextField { (alertTextField) in
             alertTextField.placeholder = "Create new item"
             textField = alertTextField
-            
         }
+        
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
     }
